@@ -4,6 +4,7 @@ README files, the presentation page and the app are in 8 languages (en, ro, fr, 
 
 ## Presentation page — 2026-11-26
 
+* Screenshots on every feature card (6 per language, tap to enlarge), recorded from the real app UI (`tools/make_feature_shots.py`).
 * Video clips for the main features (audit, one tap to the right screen, background monitor, temporary access, protection guide) in 8 languages, recorded from the real app interface with a simulated Android bridge (`tools/make_clips.py`); system settings screens are shown as a placeholder sheet.
 
 ## 1.0.0 — 2026-11-26

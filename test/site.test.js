@@ -40,3 +40,8 @@ test('clipurile video și posterele există pentru fiecare limbă', () => {
     }
   }
 });
+
+test('capturile de ecran pentru funcții există în fiecare limbă', () => {
+  for (const l of LANGS) for (const i of ['audit', 'monitor', 'open', 'temp', 'guide', 'private'])
+    assert.ok(fs.statSync(path.join(root, `docs/media/feat-${i}-${l}.webp`)).size > 4000, `${i}-${l}`);
+});

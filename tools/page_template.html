@@ -103,6 +103,16 @@ h2{border-bottom:1px solid var(--line);padding-bottom:.3rem;margin-top:2.8rem}
 #lvl{font-weight:700}
 /* clips */
 .mnote{color:var(--dim);font-size:.92rem;margin-top:0}
+.feat{display:flex;flex-direction:column;gap:.7rem}
+.feat button.th{padding:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#031317;min-height:0;display:block;width:100%}
+.feat button.th img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;transition:transform .25s}
+.feat button.th:hover img{transform:scale(1.03)}
+@media(prefers-reduced-motion:reduce){.feat button.th img{transition:none}}
+#lb{border:1px solid var(--acc);border-radius:18px;background:#031317;padding:.6rem;max-width:min(92vw,26rem);max-height:94vh;color:var(--ink)}
+#lb::backdrop{background:#000c}
+#lb img{display:block;max-width:100%;max-height:82vh;margin:0 auto;border-radius:12px}
+#lb p{margin:.5rem .2rem .2rem;font-weight:600;text-align:center}
+#lb button{display:block;margin:.5rem auto 0}
 .clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(11.5rem,1fr));gap:1rem}
 .clips figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:.6rem}
 .clips video{width:100%;height:auto;aspect-ratio:390/720;object-fit:cover;border-radius:12px;background:#031317;display:block}
@@ -214,6 +224,7 @@ footer{text-align:center;color:var(--dim);padding:2rem 1rem 4rem}
 <h2 id="shots_h"></h2><div class="shots" id="shots"></div>
 <h2 id="clips_h"></h2><p class="mnote" id="clips_note"></p><div class="clips" id="clips"></div>
 <h2 id="feat_h"></h2><div class="grid" id="feats"></div>
+<dialog id="lb" aria-label="Screenshot"><img id="lbi" alt=""><p id="lbt"></p><button id="lbc" autofocus></button></dialog>
 <h2 id="lim_h"></h2><ul class="lim" id="lims"></ul>
 <h2 id="start_h"></h2><ol class="steps" id="steps"></ol>
 <h2 id="priv_h"></h2><p id="priv"></p><p id="build"></p>
@@ -279,7 +290,9 @@ function render(){
   $('ver').textContent=t.ver.replace('{v}',VER).replace('{d}',DT);
   $('stats').innerHTML=t.stats.map(function(s){return'<div class="stat"><b>'+esc(s[0])+'</b><span>'+esc(s[1])+'</span></div>'}).join('');
   $('routes').innerHTML=t.routes.map(function(r,i){return'<div class="card"><h3>'+(i+1)+'. '+esc(r[0])+'</h3><p>'+esc(r[1])+'</p></div>'}).join('');
-  $('feats').innerHTML=t.feats.map(function(r){return'<div class="card"><h3>'+esc(r[0])+'</h3><p>'+esc(r[1])+'</p></div>'}).join('');
+  var FI=['audit','monitor','open','temp','guide','private'];
+  $('feats').innerHTML=t.feats.map(function(r,i){var src='media/feat-'+FI[i]+'-'+cur+'.webp';return'<div class="card feat"><button type="button" class="th" data-i="'+i+'" aria-label="'+esc(r[0])+'"><img loading="lazy" width="360" height="665" src="'+src+'" alt="'+esc(r[0])+'"></button><div><h3>'+esc(r[0])+'</h3><p>'+esc(r[1])+'</p></div></div>'}).join('');
+  $('feats').querySelectorAll('.th').forEach(function(b){b.onclick=function(){var i=+b.dataset.i;$('lbi').src='media/feat-'+FI[i]+'-'+cur+'.webp';$('lbi').alt=t.feats[i][0];$('lbt').textContent=t.feats[i][0];$('lbc').textContent=t.close;var d=$('lb');if(d.showModal)d.showModal();else d.setAttribute('open','')}});
   $('lims').innerHTML=t.lims.map(function(x){return'<li>'+esc(x)+'</li>'}).join('');
   $('steps').innerHTML=t.steps.map(function(x){return'<li>'+esc(x)+'</li>'}).join('');
   $('shots').innerHTML=['home','apps','monitor','guide'].map(function(n){return'<img loading="lazy" width="360" height="720" src="media/'+cur+'-'+n+'.webp" alt="STRAJA — '+n+'">'}).join('');
@@ -294,6 +307,7 @@ cur=pick();render();
 (function(){var ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
  if(ios){var c=document.querySelector('.cta');$('dl_a').classList.remove('primary');$('dl_i').classList.add('primary');c.insertBefore($('dl_i'),$('dl_a'))}})();
 var up=$('up');up.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
+$('lbc').onclick=function(){$('lb').close&&$('lb').close()};$('lb').addEventListener('click',function(e){if(e.target===$('lb'))$('lb').close()});
 window.addEventListener('scroll',function(){up.style.display=window.scrollY>600?'block':'none'},{passive:true});
 function band(){return window.innerWidth<=2199?0:1}
 window.addEventListener('resize',function(){var m=band();if(m!==render.m){render.m=m;render()}});render.m=band();
