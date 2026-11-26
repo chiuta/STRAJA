@@ -63,7 +63,7 @@ Keine Analyse, keine Server, keine Konten und keine INTERNET-Berechtigung: Die A
 - [Änderungsprotokoll](CHANGELOG.md)
 - [Quellcode](https://github.com/chiuta/STRAJA)
 - [Releases](https://github.com/chiuta/STRAJA/releases)
-- [Site](https://chiuta.github.io/STRAJA/)
+- [Site](https://straja.chiuta.ro/)
 
 ## Projekt unterstützen
 

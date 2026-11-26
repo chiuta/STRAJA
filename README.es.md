@@ -63,7 +63,7 @@ Sin analítica, sin servidores, sin cuentas y sin permiso INTERNET: la app no pu
 - [Registro de cambios](CHANGELOG.md)
 - [Código fuente](https://github.com/chiuta/STRAJA)
 - [Versiones](https://github.com/chiuta/STRAJA/releases)
-- [Site](https://chiuta.github.io/STRAJA/)
+- [Site](https://straja.chiuta.ro/)
 
 ## Apoya el proyecto
 

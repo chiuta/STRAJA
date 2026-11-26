@@ -63,7 +63,7 @@ Sem análise, sem servidores, sem contas e sem permissão INTERNET: a app não c
 - [Registo de alterações](CHANGELOG.md)
 - [Código-fonte](https://github.com/chiuta/STRAJA)
 - [Versões](https://github.com/chiuta/STRAJA/releases)
-- [Site](https://chiuta.github.io/STRAJA/)
+- [Site](https://straja.chiuta.ro/)
 
 ## Apoie o projeto
 

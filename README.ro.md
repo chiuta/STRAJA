@@ -63,7 +63,7 @@ Fără analiză, fără servere, fără conturi și fără permisiunea INTERNET:
 - [Jurnal de modificări](CHANGELOG.md)
 - [Cod sursă](https://github.com/chiuta/STRAJA)
 - [Versiuni](https://github.com/chiuta/STRAJA/releases)
-- [Site](https://chiuta.github.io/STRAJA/)
+- [Site](https://straja.chiuta.ro/)
 
 ## Susține proiectul
 

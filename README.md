@@ -63,7 +63,7 @@ No analytics, no servers, no accounts and no INTERNET permission: the app cannot
 - [Changelog](CHANGELOG.md)
 - [Source code](https://github.com/chiuta/STRAJA)
 - [Releases](https://github.com/chiuta/STRAJA/releases)
-- [Site](https://chiuta.github.io/STRAJA/)
+- [Site](https://straja.chiuta.ro/)
 
 ## Support the project
 

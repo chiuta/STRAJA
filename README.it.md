@@ -63,7 +63,7 @@ Nessuna analisi, nessun server, nessun account e nessun permesso INTERNET: l'app
 - [Registro delle modifiche](CHANGELOG.md)
 - [Codice sorgente](https://github.com/chiuta/STRAJA)
 - [Versioni](https://github.com/chiuta/STRAJA/releases)
-- [Site](https://chiuta.github.io/STRAJA/)
+- [Site](https://straja.chiuta.ro/)
 
 ## Sostieni il progetto
 

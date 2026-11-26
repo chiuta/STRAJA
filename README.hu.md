@@ -63,7 +63,7 @@ Nincs analitika, nincsenek szerverek, fiókok és INTERNET-engedély: az app sem
 - [Változásnapló](CHANGELOG.md)
 - [Forráskód](https://github.com/chiuta/STRAJA)
 - [Kiadások](https://github.com/chiuta/STRAJA/releases)
-- [Site](https://chiuta.github.io/STRAJA/)
+- [Site](https://straja.chiuta.ro/)
 
 ## Támogassa a projektet
 

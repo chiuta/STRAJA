@@ -63,7 +63,7 @@ Ni analytique, ni serveurs, ni comptes, ni permission INTERNET : l'application n
 - [Journal des modifications](CHANGELOG.md)
 - [Code source](https://github.com/chiuta/STRAJA)
 - [Versions](https://github.com/chiuta/STRAJA/releases)
-- [Site](https://chiuta.github.io/STRAJA/)
+- [Site](https://straja.chiuta.ro/)
 
 ## Soutenir le projet
 

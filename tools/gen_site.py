@@ -10,7 +10,7 @@ REPO = 'https://github.com/chiuta/STRAJA'
 APK = REPO + '/releases/latest/download/STRAJA-android.apk'
 IPA = REPO + '/releases/latest/download/STRAJA-ios-unsigned.ipa'
 COFFEE = 'https://buymeacoffee.com/echo.of.the.strings'
-SITE = 'https://chiuta.github.io/STRAJA/'
+SITE = 'https://straja.chiuta.ro/'
 
 def readme(l):
     t = T[l]; s = t['sec']
