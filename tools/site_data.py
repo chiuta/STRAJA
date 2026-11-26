@@ -2,7 +2,7 @@
 # Single source of truth for docs/index.html and the 8 README files.
 LANGS = ['en', 'ro', 'fr', 'it', 'es', 'pt', 'de', 'hu']
 NAMES = {'en': 'English', 'ro': 'Română', 'fr': 'Français', 'it': 'Italiano', 'es': 'Español', 'pt': 'Português', 'de': 'Deutsch', 'hu': 'Magyar'}
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 DATE = '2026-11-26'
 
 T = {}

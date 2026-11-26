@@ -6,7 +6,7 @@
 
 > **Ein Schutzschild gegen KI-Agenten, die Ihr Handy mitlesen**
 
-_Version: 1.0.0 · 2026-11-26_
+_Version: 1.0.1 · 2026-11-26_
 
 STRAJA zeigt, welche Apps Ihre Benachrichtigungen, Ihren Bildschirm, Ihre Fotos und SMS lesen können, warnt Sie, wenn eine neue Zugriff erhält, und führt Sie zur genauen Einstellungsseite, um ihn zu entziehen. Offline, ohne Konten, ohne Internet-Berechtigung.
 

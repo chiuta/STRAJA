@@ -2,6 +2,11 @@
 
 README files, the presentation page and the app are in 8 languages (en, ro, fr, it, es, pt, de, hu); this changelog is English only.
 
+## 1.0.1 — 2026-11-26
+
+* Fix: black screen on Android launch. The UI called `Capacitor.registerPlugin`, which is not provided by the native bridge, so the script stopped before drawing anything. The app now ships the `@capacitor/core` runtime (`www/capacitor.js`), falls back to `Capacitor.Plugins`, and a startup guard shows any error instead of a blank screen.
+* Tests now run the page against the real `native-bridge.js` (`test/android-bridge.test.js`).
+
 ## Presentation page — 2026-11-26
 
 * Screenshots on every feature card (6 per language, tap to enlarge), recorded from the real app UI (`tools/make_feature_shots.py`).

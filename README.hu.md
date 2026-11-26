@@ -6,7 +6,7 @@
 
 > **Pajzs a telefonját olvasó mesterségesintelligencia-ügynökök ellen**
 
-_Version: 1.0.0 · 2026-11-26_
+_Version: 1.0.1 · 2026-11-26_
 
 A STRAJA megmutatja, mely appok olvashatják az értesítéseit, a képernyőjét, a fotóit és az SMS-eit, figyelmeztet, ha egy újabb hozzáférést kap, és elvisz a beállítások pontos képernyőjére, ahol visszavonhatja. Offline, fiókok nélkül, internetengedély nélkül.
 

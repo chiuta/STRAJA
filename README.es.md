@@ -6,7 +6,7 @@
 
 > **Un escudo contra los agentes de IA que leen tu teléfono**
 
-_Version: 1.0.0 · 2026-11-26_
+_Version: 1.0.1 · 2026-11-26_
 
 STRAJA te muestra qué apps pueden leer tus notificaciones, tu pantalla, tus fotos y tus SMS, te avisa cuando una nueva obtiene acceso y te lleva a la pantalla exacta de ajustes para retirarlo. Sin conexión, sin cuentas, sin permiso de Internet.
 

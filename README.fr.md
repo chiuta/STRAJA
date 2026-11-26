@@ -6,7 +6,7 @@
 
 > **Un bouclier contre les agents IA qui lisent votre téléphone**
 
-_Version: 1.0.0 · 2026-11-26_
+_Version: 1.0.1 · 2026-11-26_
 
 STRAJA montre quelles applications peuvent lire vos notifications, votre écran, vos photos et vos SMS, vous prévient quand une nouvelle obtient un accès et vous amène à l'écran exact des réglages pour le retirer. Hors ligne, sans compte, sans permission Internet.
 

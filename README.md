@@ -6,7 +6,7 @@
 
 > **A shield against AI agents that read your phone**
 
-_Version: 1.0.0 · 2026-11-26_
+_Version: 1.0.1 · 2026-11-26_
 
 STRAJA shows which apps can read your notifications, your screen, your photos and your SMS, warns you when a new one gets access, and walks you to the exact settings screen to revoke it. Offline, no accounts, no internet permission.
 

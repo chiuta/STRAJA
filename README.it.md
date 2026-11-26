@@ -6,7 +6,7 @@
 
 > **Uno scudo contro gli agenti IA che leggono il tuo telefono**
 
-_Version: 1.0.0 · 2026-11-26_
+_Version: 1.0.1 · 2026-11-26_
 
 STRAJA mostra quali app possono leggere notifiche, schermo, foto e SMS, ti avvisa quando una nuova ottiene accesso e ti porta alla schermata esatta delle impostazioni per revocarlo. Offline, senza account, senza permesso Internet.
 

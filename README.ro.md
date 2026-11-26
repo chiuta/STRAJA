@@ -6,7 +6,7 @@
 
 > **Un scut împotriva agenților AI care citesc telefonul tău**
 
-_Version: 1.0.0 · 2026-11-26_
+_Version: 1.0.1 · 2026-11-26_
 
 STRAJA îți arată ce aplicații pot citi notificările, ecranul, pozele și SMS-urile, te avertizează când una primește acces nou și te duce la ecranul exact din setări unde îl poți retrage. Offline, fără conturi, fără permisiunea INTERNET.
 

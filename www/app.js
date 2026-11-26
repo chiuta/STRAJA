@@ -3,14 +3,22 @@
   'use strict';
 
   var Core = window.StrajaCore, Data = window.StrajaData, I18n = window.StrajaI18n;
-  var VERSION = '1.0.0';
+  var VERSION = '1.0.1';
   var cap = window.Capacitor || null;
   var platform = cap && cap.getPlatform ? cap.getPlatform() : 'web';
   var isNative = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
   var isAndroid = isNative && platform === 'android';
   var isIos = isNative && platform === 'ios';
-  var Straja = isAndroid ? cap.registerPlugin('Straja') : null;
-  var LN = isNative ? cap.registerPlugin('LocalNotifications') : null;
+  // registerPlugin vine din runtime-ul @capacitor/core (capacitor.js); dacă lipsește, folosim proxy-urile punții native.
+  function plugin(name) {
+    try {
+      if (cap && typeof cap.registerPlugin === 'function') return cap.registerPlugin(name);
+      if (cap && cap.Plugins && cap.Plugins[name]) return cap.Plugins[name];
+    } catch (e) { /* plugin indisponibil */ }
+    return null;
+  }
+  var Straja = isAndroid ? plugin('Straja') : null;
+  var LN = isNative ? plugin('LocalNotifications') : null;
   var guidePlatform = isIos ? 'ios' : 'android'; // în browser arătăm varianta Android
 
   // ---------------------------------------------------------------- stare
