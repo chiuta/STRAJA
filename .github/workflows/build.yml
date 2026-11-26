@@ -36,7 +36,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
+      - name: Android SDK (preinstalled on the runner)
+        run: |
+          echo "ANDROID_HOME=${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}" >> "$GITHUB_ENV"
+          yes | "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
       - run: npm ci
       - run: npx cap sync android
 
