@@ -2,6 +2,10 @@
 
 README files, the presentation page and the app are in 8 languages (en, ro, fr, it, es, pt, de, hu); this changelog is English only.
 
+## Presentation page — 2026-11-26
+
+* Video clips for the main features (audit, one tap to the right screen, background monitor, temporary access, protection guide) in 8 languages, recorded from the real app interface with a simulated Android bridge (`tools/make_clips.py`); system settings screens are shown as a placeholder sheet.
+
 ## 1.0.0 — 2026-11-26
 
 * First release. Capacitor 8 app (Android + iOS), offline, no INTERNET permission.

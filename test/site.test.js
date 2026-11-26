@@ -31,3 +31,12 @@ test('capturile de ecran există pentru fiecare limbă', () => {
     assert.ok(fs.existsSync(path.join(root, `docs/media/${l}-${n}.webp`)), `${l}-${n}`);
   assert.ok(fs.existsSync(path.join(root, 'docs/logo.svg')));
 });
+
+test('clipurile video și posterele există pentru fiecare limbă', () => {
+  for (const l of LANGS) for (const c of ['audit', 'apps', 'monitor', 'temp', 'guide']) {
+    for (const ext of ['mp4', 'webp']) {
+      const f = path.join(root, `docs/media/clip-${c}-${l}.${ext}`);
+      assert.ok(fs.existsSync(f) && fs.statSync(f).size > 5000, `${c}-${l}.${ext}`);
+    }
+  }
+});

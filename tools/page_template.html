@@ -101,6 +101,16 @@ h2{border-bottom:1px solid var(--line);padding-bottom:.3rem;margin-top:2.8rem}
 .meter i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s,background .3s}
 @media(prefers-reduced-motion:reduce){.meter i{transition:none}}
 #lvl{font-weight:700}
+/* clips */
+.mnote{color:var(--dim);font-size:.92rem;margin-top:0}
+.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(11.5rem,1fr));gap:1rem}
+.clips figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:.6rem}
+.clips video{width:100%;height:auto;aspect-ratio:390/720;object-fit:cover;border-radius:12px;background:#031317;display:block}
+.clips figcaption{font-size:.9rem;color:var(--dim);padding:.5rem .2rem .1rem}
+.clips figcaption b{display:block;color:var(--ink)}
+@media(max-width:700px){.clips{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -1rem;padding:0 1rem .5rem}.clips figure{flex:0 0 68%;scroll-snap-align:start}}
+@media(min-width:701px) and (max-width:1099px){.clips{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1100px){.clips{grid-template-columns:repeat(5,1fr)}}
 /* shots */
 .shots{display:flex;gap:.8rem;overflow-x:auto;padding:.3rem 0 1rem;scroll-snap-type:x mandatory}
 .shots img{height:440px;width:auto;border-radius:18px;border:1px solid var(--line);scroll-snap-align:start;flex:none}
@@ -202,6 +212,7 @@ footer{text-align:center;color:var(--dim);padding:2rem 1rem 4rem}
 <h2 id="demo_h"></h2><p id="demo_intro"></p>
 <div class="demo" id="demo"></div>
 <h2 id="shots_h"></h2><div class="shots" id="shots"></div>
+<h2 id="clips_h"></h2><p class="mnote" id="clips_note"></p><div class="clips" id="clips"></div>
 <h2 id="feat_h"></h2><div class="grid" id="feats"></div>
 <h2 id="lim_h"></h2><ul class="lim" id="lims"></ul>
 <h2 id="start_h"></h2><ol class="steps" id="steps"></ol>
@@ -215,7 +226,7 @@ footer{text-align:center;color:var(--dim);padding:2rem 1rem 4rem}
 var DATA=%%DATA%%;
 var LANGS=Object.keys(DATA),REPO="%%REPO%%",VER="%%VERSION%%",DT="%%DATE%%",cur='en',aud=0,fs=1;
 var APPS=[{n:'Meta AI',ai:1,v:[1,0,1]},{n:'Gemini',ai:1,v:[0,1,1]},{n:'Notes+',ai:0,v:[0,0,0]},{n:'Weather',ai:0,v:[1,0,0]}];
-var W=[3,3,2],ICONS=['🛡️','📰','👪'],CHIPS=[[0,1,2,3],[0,1,3],[0,3]],SECS=['who','demo_h','shots_h','feat_h','start_h','docs_h'];
+var W=[3,3,2],ICONS=['🛡️','📰','👪'],CHIPS=[[0,1,2,3],[0,1,3],[0,3]],SECS=['who','demo_h','shots_h','clips_h','feat_h','start_h','docs_h'];
 function $(i){return document.getElementById(i)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function pick(){
@@ -262,8 +273,8 @@ function render(){
   $('langbar').innerHTML=LANGS.map(function(l){return'<button aria-pressed="'+(l===cur)+'" data-l="'+l+'" lang="'+l+'" title="'+esc(DATA[l].name)+'">'+(window.innerWidth<=2199?l.toUpperCase():esc(DATA[l].name))+'</button>'}).join('');
   $('langbar').querySelectorAll('button').forEach(function(b){b.onclick=function(){cur=b.dataset.l;try{localStorage.setItem('straja.site',cur)}catch(e){}render()}});
   $('fm').setAttribute('aria-label',t.fsm);$('fp').setAttribute('aria-label',t.fsp);
-  $('sitenav').innerHTML=SECS.map(function(s,i){return'<a href="#'+s+'">'+esc(t.nav[i])+'</a>'}).join('');
-  ['tag','lede','dl_a','dl_i','dl_s','ios_note','pp','why_h','why','routes_h','demo_h','demo_intro','aud_h','shots_h','feat_h','lim_h','start_h','priv_h','priv','build','docs_h','sup_h','sup','foot'].forEach(function(k){$(k).textContent=t[k]});
+  $('sitenav').innerHTML=SECS.map(function(s,i){return'<a href="#'+s+'">'+esc((i===3?t.nav_v:t.nav[i>3?i-1:i]))+'</a>'}).join('');
+  ['tag','lede','dl_a','dl_i','dl_s','ios_note','pp','why_h','why','routes_h','demo_h','demo_intro','aud_h','shots_h','clips_h','clips_note','feat_h','lim_h','start_h','priv_h','priv','build','docs_h','sup_h','sup','foot'].forEach(function(k){$(k).textContent=t[k]});
   $('rel').textContent=t.allrel;
   $('ver').textContent=t.ver.replace('{v}',VER).replace('{d}',DT);
   $('stats').innerHTML=t.stats.map(function(s){return'<div class="stat"><b>'+esc(s[0])+'</b><span>'+esc(s[1])+'</span></div>'}).join('');
@@ -272,6 +283,7 @@ function render(){
   $('lims').innerHTML=t.lims.map(function(x){return'<li>'+esc(x)+'</li>'}).join('');
   $('steps').innerHTML=t.steps.map(function(x){return'<li>'+esc(x)+'</li>'}).join('');
   $('shots').innerHTML=['home','apps','monitor','guide'].map(function(n){return'<img loading="lazy" width="360" height="720" src="media/'+cur+'-'+n+'.webp" alt="STRAJA — '+n+'">'}).join('');
+  $('clips').innerHTML=[['audit',0],['apps',2],['monitor',1],['temp',3],['guide',4]].map(function(c){var f=t.feats[c[1]];return'<figure><video controls muted loop playsinline preload="none" width="390" height="720" poster="media/clip-'+c[0]+'-'+cur+'.webp" aria-label="'+esc(f[0])+'"><source src="media/clip-'+c[0]+'-'+cur+'.mp4" type="video/mp4"></video><figcaption><b>'+esc(f[0])+'</b></figcaption></figure>'}).join('');
   $('docs').innerHTML=[[t.doc_l[0],REPO+'/blob/main/CHANGELOG.md'],[t.doc_l[1],REPO],[t.doc_l[2],REPO+'/releases']].map(function(d){return'<li><a href="'+d[1]+'">'+esc(d[0])+'</a></li>'}).join('');
   renderDemo();renderAud();
 }
