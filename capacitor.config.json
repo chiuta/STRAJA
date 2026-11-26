@@ -1,0 +1,7 @@
+{
+  "appId": "tf.trom.straja",
+  "appName": "STRAJA",
+  "webDir": "www",
+  "android": { "allowMixedContent": false },
+  "plugins": { "LocalNotifications": { "smallIcon": "ic_stat_straja" } }
+}

@@ -1,0 +1,176 @@
+name: Build STRAJA (APK + IPA)
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # necesar doar pentru atașarea fișierelor la un Release (tag v*)
+
+jobs:
+  test:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: latest
+      - name: Node trebuie să fie cel puțin 24
+        run: |
+          node -e "if (+process.versions.node.split('.')[0] < 24) { console.error('Node prea vechi - ' + process.version); process.exit(1); }"
+      - run: npm ci
+      - run: npm test
+
+  android:
+    needs: test
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: latest
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - run: npm ci
+      - run: npx cap sync android
+
+      # Cheie stabilă: setați secretele ANDROID_KEYSTORE_BASE64, ANDROID_KS_PASS, ANDROID_KEY_ALIAS, ANDROID_KEY_PASS.
+      # Fără ele, se generează o cheie temporară (APK-ul se instalează, dar nu se poate actualiza peste o versiune cu altă cheie).
+      - name: Pregătește cheia de semnare
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KS_PASS }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASS }}
+        run: |
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/straja.jks"
+          else
+            echo "::warning::Fără cheie în secrete: se folosește o cheie temporară."
+            KS_PASS=$(openssl rand -hex 16); KEY_PASS=$KS_PASS; KEY_ALIAS=straja
+            keytool -genkeypair -v -keystore "$RUNNER_TEMP/straja.jks" -storepass "$KS_PASS" -keypass "$KEY_PASS" \
+              -alias "$KEY_ALIAS" -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=STRAJA"
+          fi
+          {
+            echo "STRAJA_KEYSTORE=$RUNNER_TEMP/straja.jks"
+            echo "STRAJA_KS_PASS=$KS_PASS"
+            echo "STRAJA_KEY_ALIAS=$KEY_ALIAS"
+            echo "STRAJA_KEY_PASS=$KEY_PASS"
+          } >> "$GITHUB_ENV"
+
+      - name: Compilează APK (release)
+        working-directory: android
+        run: ./gradlew --no-daemon assembleRelease
+
+      - name: Verifică APK-ul (semnătură și absența permisiunii INTERNET)
+        run: |
+          APK=$(ls android/app/build/outputs/apk/release/*.apk | head -1)
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$BT/apksigner" verify --print-certs "$APK"
+          "$BT/aapt2" dump permissions "$APK" | tee perms.txt
+          if grep -q "android.permission.INTERNET" perms.txt; then
+            echo "::error::APK-ul declară INTERNET, dar STRAJA trebuie să funcționeze fără rețea."; exit 1
+          fi
+          cp "$APK" STRAJA-android.apk
+          sha256sum STRAJA-android.apk | tee STRAJA-android.apk.sha256
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: STRAJA-android
+          path: |
+            STRAJA-android.apk
+            STRAJA-android.apk.sha256
+
+  ios:
+    needs: test
+    runs-on: macos-latest   # iOS se compilează doar pe macOS (Xcode)
+    env:
+      HAS_SIGNING: ${{ secrets.IOS_CERT_P12_BASE64 != '' && secrets.IOS_PROFILE_BASE64 != '' && secrets.IOS_TEAM_ID != '' }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: latest
+      - run: npm ci
+      - run: npx cap sync ios
+
+      # Varianta 1 (implicit): IPA nesemnat, pentru a fi semnat ulterior (AltStore, Sideloadly, certificatul propriu).
+      - name: Compilează IPA nesemnat
+        if: env.HAS_SIGNING != 'true'
+        run: |
+          set -euo pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' -archivePath build/App.xcarchive \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" archive
+          mkdir -p build/Payload
+          cp -R build/App.xcarchive/Products/Applications/App.app build/Payload/
+          (cd build && zip -qry ../STRAJA-ios-unsigned.ipa Payload)
+          shasum -a 256 STRAJA-ios-unsigned.ipa | tee STRAJA-ios-unsigned.ipa.sha256
+
+      # Varianta 2: IPA semnat, dacă ați setat secretele IOS_CERT_P12_BASE64, IOS_CERT_PASSWORD, IOS_PROFILE_BASE64, IOS_TEAM_ID.
+      - name: Compilează IPA semnat
+        if: env.HAS_SIGNING == 'true'
+        env:
+          CERT_B64: ${{ secrets.IOS_CERT_P12_BASE64 }}
+          CERT_PASS: ${{ secrets.IOS_CERT_PASSWORD }}
+          PROFILE_B64: ${{ secrets.IOS_PROFILE_BASE64 }}
+          TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          KC="$RUNNER_TEMP/build.keychain-db"; KCPASS=$(uuidgen)
+          security create-keychain -p "$KCPASS" "$KC"
+          security set-keychain-settings -lut 21600 "$KC"
+          security unlock-keychain -p "$KCPASS" "$KC"
+          echo "$CERT_B64" | base64 -d > "$RUNNER_TEMP/cert.p12"
+          security import "$RUNNER_TEMP/cert.p12" -P "$CERT_PASS" -A -t cert -f pkcs12 -k "$KC"
+          security set-key-partition-list -S apple-tool:,apple: -k "$KCPASS" "$KC"
+          security list-keychains -d user -s "$KC" login.keychain-db
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROFILE_B64" | base64 -d > "$RUNNER_TEMP/p.mobileprovision"
+          UUID=$(/usr/libexec/PlistBuddy -c 'Print UUID' /dev/stdin <<< "$(security cms -D -i "$RUNNER_TEMP/p.mobileprovision")")
+          NAME=$(/usr/libexec/PlistBuddy -c 'Print Name' /dev/stdin <<< "$(security cms -D -i "$RUNNER_TEMP/p.mobileprovision")")
+          cp "$RUNNER_TEMP/p.mobileprovision" ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' -archivePath build/App.xcarchive \
+            DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER="$NAME" \
+            CODE_SIGN_IDENTITY="Apple Distribution" archive
+          cat > build/export.plist <<PL
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>release-testing</string>
+            <key>teamID</key><string>$TEAM_ID</string>
+            <key>signingStyle</key><string>manual</string>
+            <key>provisioningProfiles</key><dict><key>tf.trom.straja</key><string>$NAME</string></dict>
+          </dict></plist>
+          PL
+          xcodebuild -exportArchive -archivePath build/App.xcarchive -exportPath build/export -exportOptionsPlist build/export.plist
+          cp build/export/*.ipa STRAJA-ios.ipa
+          shasum -a 256 STRAJA-ios.ipa | tee STRAJA-ios.ipa.sha256
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: STRAJA-ios
+          path: |
+            STRAJA-ios*.ipa
+            STRAJA-ios*.sha256
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [android, ios]
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

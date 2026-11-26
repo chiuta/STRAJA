@@ -1,0 +1,27 @@
+{
+  "name": "straja",
+  "version": "1.0.0",
+  "private": true,
+  "description": "STRAJA - scut împotriva agenților AI care citesc ecranul, notificările și fotografiile telefonului",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "sync": "npx cap sync",
+    "native:android": "node scripts/patch-android.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/ios": "^8.0.0",
+    "@capacitor/local-notifications": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "jsdom": "^26.0.0",
+    "sharp": "^0.35.5"
+  }
+}

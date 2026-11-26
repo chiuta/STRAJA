@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">STRAJA</string>
+    <string name="title_activity_main">STRAJA</string>
+    <string name="package_name">tf.trom.straja</string>
+    <string name="custom_url_scheme">tf.trom.straja</string>
+</resources>

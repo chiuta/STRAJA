@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="STRAJA">
+<rect width="200" height="200" rx="36" fill="#0b3a44"/>
+<path d="M100 28 48 50v46c0 33 22 62 52 72 30-10 52-39 52-72V50z" fill="#4cc3d6"/>
+<g fill="none" stroke="#0b3a44" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M70 100s14-21 30-21 30 21 30 21-14 21-30 21-30-21-30-21z"/></g>
+<circle cx="100" cy="100" r="7" fill="#0b3a44"/>
+</svg>
